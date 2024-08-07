@@ -1,15 +1,38 @@
-const http = require('http');
+// Create web server
+const express = require('express');
+const app = express();
 
-// Create an HTTP server
-const server = http.createServer((req, res) => {
-  // Set the response HTTP header with HTTP status and Content type
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  // Send the response body
-  res.end('Hello, World!\n');
+// Create body-parser
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
+// Create comments array
+const comments = [
+    {username: 'alice', comment: 'I love apples'},
+    {username: 'bob', comment: 'I love oranges'},
+    {username: 'eve', comment: 'I love pineapples'}
+];
+
+// Create GET request
+app.get('/comments', (req, res) => {
+    res.json(comments);
 });
 
-// The server listens on port 3000
-const PORT = 3000;
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+// Create POST request
+app.post('/comments', (req, res) => {
+    const comment = req.body;
+    comments.push(comment);
+    res.json(comment);
+});
+
+// Create DELETE request
+app.delete('/comments/:index', (req, res) => {
+    const index = req.params.index;
+    comments.splice(index, 1);
+    res.json({message: 'success'});
+});
+
+// Start server
+app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
 });
