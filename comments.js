@@ -1,42 +1,25 @@
 // create web server
-var http = require('http');
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
 var fs = require('fs');
-var url = require('url');
 
-var server = http.createServer(function(request, response) {
-  var url_parts = url.parse(request.url);
-  var path = url_parts.pathname;
-
-  switch(path) {
-    case '/':
-      fs.readFile('index.html', function(error, data) {
-        response.writeHead(200, { 'Content-Type': 'text/html' });
-        response.end(data);
-      });
-      break;
-    case '/comments':
-      if (request.method == 'POST') {
-        var body = '';
-        request.on('data', function(data) {
-          body += data;
-        });
-        request.on('end', function() {
-          var post = qs.parse(body);
-          console.log(post);
-          response.writeHead(200, { 'Content-Type': 'text/plain' });
-          response.end('You posted:\n\n' + post.comment);
-        });
-      } else {
-        response.writeHead(200, { 'Content-Type': 'text/plain' });
-        response.end('Hello, World!');
-      }
-      break;
-    default:
-      response.writeHead(404);
-      response.end('Not Found');
-      break;
-  }
+// create the server
+var server = app.listen(3000, function() {
+    console.log('Server is running at http://localhost:3000');
 });
 
-server.listen(3000);
-console.log('Server running at http://localhost:3000/');
+// set up the public directory
+app.use(express.static('public'));
+
+// set up body-parser
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+// set up the comments data
+var comments = {
+    "comments": [
+        {"author": "John", "text": "This is a comment"},
+        {"author": "Mike", "text": "This is a second comment"}
+    ]
+};
