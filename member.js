@@ -31,4 +31,5 @@ function skillsMember(){
   // 8. Clean the form
   document.getElementById('member').value = '';
     
+    // 9. Return false to avoid the form submit
 }
