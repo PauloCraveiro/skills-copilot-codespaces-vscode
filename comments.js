@@ -1,25 +1,15 @@
-// create web server
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var fs = require('fs');
+const http = require('http');
 
-// create the server
-var server = app.listen(3000, function() {
-    console.log('Server is running at http://localhost:3000');
+// Create an HTTP server
+const server = http.createServer((req, res) => {
+  // Set the response HTTP header with HTTP status and Content type
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  // Send the response body
+  res.end('Hello, World!\n');
 });
 
-// set up the public directory
-app.use(express.static('public'));
-
-// set up body-parser
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
-
-// set up the comments data
-var comments = {
-    "comments": [
-        {"author": "John", "text": "This is a comment"},
-        {"author": "Mike", "text": "This is a second comment"}
-    ]
-};
+// The server listens on port 3000
+const PORT = 3000;
+server.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}/`);
+});
